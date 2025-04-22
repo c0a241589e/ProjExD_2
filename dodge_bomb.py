@@ -30,7 +30,23 @@ def main():
     bb_rct.centery = random.randint(0, HEIGHT)
     bb_img.set_colorkey((0, 0, 0))
     vx = 5
-    vy = -5
+    vy = 5
+
+    def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
+        """ 
+        引数：こうかとん Rectまたは爆弾Rect
+        戻り値：判定結果タプル（横, 縦）
+        画面内ならTrue, 画面外ならFalse
+        """
+        yoko, tate = True, True
+        #横方向判定
+        if rct.left < 0 or WIDTH < rct.right:
+            yoko = False
+        #縦方向判定
+        if rct.top < 0 or HEIGHT < rct.bottom:
+            tate = False
+        return (yoko, tate)
+
 
     clock = pg.time.Clock()
     tmr = 0
@@ -59,8 +75,15 @@ def main():
         # if key_lst[pg.K_RIGHT]:
         #     sum_mv[0] += 5
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) != (True, True):
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
         bb_rct.move_ip(vx, vy)
+        yoko, tate =  check_bound(bb_rct)
+        if not yoko:  # 左右どちらかにはみ出ていたら
+            vx *= -1
+        if not tate:  # 上下どちらかにはみ出ていたら
+            vy *= -1
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
