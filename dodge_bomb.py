@@ -1,6 +1,7 @@
 import os
 import random
 import sys
+import time
 import pygame as pg
 
 
@@ -31,6 +32,8 @@ def main():
     bb_img.set_colorkey((0, 0, 0))
     vx = 5
     vy = 5
+    #応用課題1こうかとん
+    kk_img2 = pg.image.load("fig/8.png")
 
     def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
         """ 
@@ -47,6 +50,21 @@ def main():
             tate = False
         return (yoko, tate)
     
+    #応用課題1
+    def gameover(screen: pg.Surface) -> None:
+        img = pg.Surface((WIDTH, HEIGHT))
+        pg.draw.rect(img, (0,0,0), (0, 0, WIDTH, HEIGHT))
+        img.set_alpha(100)
+        screen.blit(img, [0,0])
+        screen.blit(kk_img2, [350, 280]) 
+        screen.blit(kk_img2, [710, 280]) 
+        fonto = pg.font.Font(None, 80)
+        txt = fonto.render("Game Over", True, (255, 255, 255))
+        screen.blit(txt, [400, 300])
+        pg.display.update()
+        time.sleep(5)
+    
+    # 応用課題2
     def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
         bb_accs = [a for a in range(1, 11)]
         bb_imgs = []
@@ -68,7 +86,7 @@ def main():
         screen.blit(bg_img, [0, 0]) 
 
         if kk_rct.colliderect(bb_rct):
-            print("Game Over")
+            gameover(screen)
             return
 
         key_lst = pg.key.get_pressed()
