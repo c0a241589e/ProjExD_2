@@ -46,10 +46,21 @@ def main():
         if rct.top < 0 or HEIGHT < rct.bottom:
             tate = False
         return (yoko, tate)
+    
+    def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+        bb_accs = [a for a in range(1, 11)]
+        bb_imgs = []
+        for r in range(1, 11):
+            bb_img = pg.Surface((20*r, 20*r))
+            pg.draw.circle(bb_img, (255, 0, 0), (10*r, 10*r), 10*r)
+            bb_img.set_colorkey((0, 0, 0))
+            bb_imgs += [bb_img]
+        return bb_accs, bb_imgs
 
 
     clock = pg.time.Clock()
     tmr = 0
+    
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -82,7 +93,12 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
-        bb_rct.move_ip(vx, vy)
+        # ここに爆弾の速度を入れる
+        bb_accs, bb_imgs = init_bb_imgs()
+        avx = vx * bb_accs[min(tmr//500, 9)]
+        avy = vy * bb_accs[min(tmr//500, 9)]
+        bb_img = bb_imgs[min(tmr//500, 9)]
+        bb_rct.move_ip(avx, avy)
         yoko, tate =  check_bound(bb_rct)
         if not yoko:  # 左右どちらかにはみ出ていたら
             vx *= -1
