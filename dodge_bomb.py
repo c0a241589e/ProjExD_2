@@ -53,7 +53,7 @@ def main():
     #応用課題1
     def gameover(screen: pg.Surface) -> None:
         img = pg.Surface((WIDTH, HEIGHT))
-        pg.draw.rect(img, (0,0,0), (0, 0, WIDTH, HEIGHT))
+        pg.draw.rect(img, (0,0,0), pg.Rect(0, 0, WIDTH, HEIGHT))
         img.set_alpha(100)
         screen.blit(img, [0,0])
         screen.blit(kk_img2, [350, 280]) 
@@ -111,7 +111,7 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
-        # ここに爆弾の速度を入れる
+        # 応用課題2
         bb_accs, bb_imgs = init_bb_imgs()
         avx = vx * bb_accs[min(tmr//500, 9)]
         avy = vy * bb_accs[min(tmr//500, 9)]
